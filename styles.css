@@ -1,0 +1,559 @@
+/* --- Core Variables (The Cyber-Pop Palette) --- */
+/* --- Core Variables (The Cyber-Pop Palette) --- */
+/* top of styles.css */
+/* --- Variable Animation Magic --- */
+@property --accent-teal {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: #39C5BB;
+}
+
+@property --action-red {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: #D64A4C;
+}
+
+/* Add the transition directly to the root where the variables live */
+:root {
+    transition: --accent-teal 4s ease-in-out, --action-red 4s ease-in-out;
+}
+:root {
+    --bg-main: #FFFFFF;        
+    --bg-alt: #F4F4F9;         
+    --text-main: #191A1E;      
+    --accent-teal: #39C5BB;    
+    --action-red: #D64A4C;     
+    --font-stack: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-pixel: 'Press Start 2P', cursive; /* Added Pixel Font */
+}
+
+/* --- Resets & Typography --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- Rhythm Game Dot-Matrix & Arcade Background --- */
+body {
+    font-family: var(--font-stack);
+    color: var(--text-main);
+    line-height: 1.6;
+    
+    /* The Base Color */
+    background-color: var(--bg-alt);
+    
+    /* The Moving Polka Dots (Classic J-Pop/Idol Aesthetic) */
+    background-image: radial-gradient(var(--accent-teal) 3px, transparent 3px);
+    background-size: 40px 40px;
+    background-position: 0 0;
+    
+    /* The Animation */
+    animation: dotScroll 15s linear infinite;
+    
+    position: relative;
+
+    transition: background-color 4s ease-in-out, color 4s ease-in-out;
+}
+
+/* Whitewash Overlay: keeps the dots faded so your text stays readable */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--bg-main);
+    opacity: 0.85; 
+    z-index: -1;
+}
+
+/* Retro Arcade CRT Scanlines */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.04) 50%
+    );
+    background-size: 100% 4px;
+    z-index: 9999;
+    pointer-events: none; /* Critical: lets your mouse click through the scanlines! */
+}
+
+@keyframes dotScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: -40px -40px; }
+}
+
+/* Apply Pixel Font to UI Elements */
+h1, h2, h3, .logo, .nav-links a, .btn, .exp-date, .footer-link {
+    font-family: var(--font-pixel);
+    text-transform: uppercase;
+    line-height: 1.4;
+}
+
+.accent-text {
+    color: var(--accent-teal);
+}
+
+/* --- Navigation --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 5%;
+    background-color: var(--bg-main);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1rem; /* Scaled down heavily for the wide pixel font */
+    color: var(--text-main);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.2rem; /* Shrunk the gap from 2rem to 1.2rem */
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-size: 0.6rem; /* Shrunk from standard size to fit the horizontal row */
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--accent-teal);
+}
+
+/* --- Sections & Layout --- */
+.section {
+    padding: 5rem 10%;
+}
+
+.alt-bg {
+    background-color: var(--bg-alt);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    border-bottom: 3px solid var(--accent-teal);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* --- Cards --- */
+.card {
+    background: var(--bg-main);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-top: 4px solid var(--accent-teal);
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.card:hover, .experience-card:hover {
+    transform: translate(-6px, -6px); /* Snaps up and left */
+    border-color: var(--accent-teal);
+    /* The magic line: creates a hard, un-blurred pixel shadow */
+    box-shadow: 8px 8px 0px var(--accent-teal); 
+    transition: transform 0.1s, border-color 4s ease-in-out, box-shadow 4s ease-in-out;
+}
+
+.card h3 {
+    margin-bottom: 1rem;
+}
+
+.card p {
+    margin-bottom: 1.5rem;
+}
+
+/* --- Hero Section --- */
+.hero {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    line-height: 1.2;
+}
+
+.hero h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+/* --- Buttons --- */
+/* --- Buttons --- */
+.btn {
+    padding: 0.8rem 1.2rem;
+    text-decoration: none;
+    font-size: 0.7rem; /* Explicitly scale down the button text */
+    border-radius: 4px;
+    transition: all 0.3s;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+}
+
+.primary-btn {
+    background-color: var(--accent-teal);
+    color: var(--bg-main);
+}
+
+.primary-btn:hover {
+    background-color: var(--text-main);
+}
+
+.secondary-btn {
+    background-color: var(--action-red);
+    color: var(--bg-main);
+}
+
+.secondary-btn:hover {
+    background-color: var(--text-main);
+}
+
+/* --- Timelines & Placeholders --- */
+.timeline-item {
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--accent-teal);
+}
+
+.video-placeholder, .art-placeholder {
+    width: 100%;
+    height: 200px;
+    background-color: #E0E0E0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-style: italic;
+    border-radius: 4px;
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--text-main);
+    color: var(--bg-main);
+}
+
+/* --- Upgraded Experience Cards --- */
+.experience-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.experience-card {
+    background: var(--bg-main);
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-left: 5px solid var(--accent-teal);
+    transition: transform 0.3s;
+}
+
+.experience-card:hover {
+    transform: translateX(10px);
+}
+
+/* --- Upgraded Experience Cards --- */
+.exp-header {
+    display: flex;
+    flex-direction: column; /* Forces vertical stacking */
+    align-items: flex-start; /* Aligns everything to the left */
+    margin-bottom: 0.5rem;
+    gap: 0.5rem; /* Adds a clean gap between the title and the date */
+}
+
+.exp-header h3 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.exp-date {
+    font-weight: bold;
+    color: var(--action-red);
+}
+
+.experience-card h4 {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.experience-card ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.experience-card li {
+    margin-bottom: 0.5rem;
+}
+
+.tech-tags {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.tech-tags span {
+    background-color: var(--bg-alt);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--accent-teal);
+}
+
+/* --- Global Footer --- */
+.site-footer {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--text-main);
+    color: var(--bg-main);
+}
+
+.footer-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.footer-link {
+    color: var(--bg-main);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: color 0.3s, transform 0.3s;
+    display: inline-block;
+}
+
+.footer-link:hover {
+    color: var(--action-red);
+    transform: translateY(-3px);
+}
+
+/* --- JavaScript Animation Classes --- */
+
+/* Initial state for scroll elements */
+.hidden {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* The state when elements are visible on screen */
+.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* A blinking cursor for the typing effect */
+.cursor::after {
+    content: '|';
+    color: var(--action-red);
+    animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* --- Upgraded osu! Click Effect --- */
+.osu-hit {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: var(--accent-teal);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+    pointer-events: none; /* Let clicks pass through it */
+    animation: hitFade 0.3s ease-out forwards;
+    z-index: 9998;
+}
+
+.osu-approach {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 3px solid var(--accent-teal);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: approachShrink 0.3s ease-in forwards;
+    z-index: 9999;
+}
+
+@keyframes hitFade {
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+@keyframes approachShrink {
+    100% { width: 40px; height: 40px; opacity: 0; }
+}
+
+/* --- Mobile Responsiveness (The Final Boss) --- */
+@media screen and (max-width: 768px) {
+    /* 1. Scale down the Hero Section */
+    .hero {
+        padding: 0 5%;
+        text-align: center;
+        height: auto;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem; /* Shrunk for mobile */
+    }
+
+    .hero h2 {
+        font-size: 1.2rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column; /* Stack buttons on top of each other */
+        align-items: center;
+    }
+
+    /* 2. Adjust the Navbar */
+    .navbar {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+        font-size: 0.8rem;
+    }
+
+    /* 3. Responsive Grids */
+    .grid-container {
+        grid-template-columns: 1fr; /* Force single column */
+    }
+
+    .section {
+        padding: 3rem 5%;
+    }
+
+    .section-title {
+        font-size: 1.1rem; /* Pixel fonts are wide, so we shrink them more */
+    }
+
+    /* 4. Experience Cards Fix */
+    .experience-card {
+        padding: 1.5rem;
+    }
+
+    .exp-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .exp-date {
+        font-size: 0.7rem;
+    }
+
+    /* 5. The Undyne Arena */
+    #undyne-btn {
+        font-size: 0.6rem; /* Make the button smaller so it has more room to run */
+    }
+}
+/* --- 3D Pixel Text Effects --- */
+.hero h1 {
+    /* Creates a chunky, overlapping shadow using your accent colors */
+    text-shadow: 4px 4px 0px var(--accent-teal), 8px 8px 0px var(--text-main);
+    letter-spacing: 2px;
+}
+
+/* Let's give the active navigation link a subtle glow */
+.nav-links a.active {
+    color: var(--accent-teal);
+    text-shadow: 0px 0px 8px rgba(57, 197, 187, 0.6);
+}
+
+/* --- Custom Arcade Scrollbar --- */
+::-webkit-scrollbar {
+    width: 14px; /* Chunky width */
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-alt);
+    border-left: 2px solid var(--text-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-teal);
+    border: 3px solid var(--text-main); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--action-red);
+}
+
+/* --- Art Gallery Images --- */
+.art-img {
+    /* Ensures the image fills its grid space but doesn't overflow */
+    width: 100%;
+    height: auto;
+    display: block;
+    
+    /* The thick, retro border matching your text color */
+    border: 4px solid var(--text-main);
+    
+    /* Smooth transition for the hover effect */
+    transition: all 0.2s ease-in-out;
+}
+
+/* The hover effect: snaps up and gets a colored pixel shadow */
+.art-img:hover {
+    border-color: var(--accent-teal);
+    transform: translate(-6px, -6px);
+    box-shadow: 8px 8px 0px var(--accent-teal);
+}

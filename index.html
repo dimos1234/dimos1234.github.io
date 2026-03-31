@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam Shaltout | Software Engineer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Adam Shaltout</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Professional</a></li>
+            <li><a href="games.html">Games & Devlogs</a></li>
+            <li><a href="creative.html">Art & Lifestyle</a></li>
+            <li><button id="vocal-toggle" class="btn primary-btn" style="padding: 0.4rem 1rem;">[ 01 ] Mode</button></li>
+        </ul>
+    </nav>
+
+    <header class="hero" id="hub">
+        <div class="hero-content">
+            <h1>Adam Shaltout</h1>
+            <h2 class="accent-text cursor" id="typewriter"></h2>
+            <p>I’m a software engineer, indie game developer, and digital creator. From writing backend logic to designing immersive 2D/3D worlds and producing content, I turn ambitious ideas into fully realized projects.</p>
+            <div class="hero-buttons">
+                <a href="#engineering" class="btn primary-btn">View My Resume</a>
+                <a href="games.html" class="btn secondary-btn">Play My Games</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="section alt-bg" id="engineering">
+        <h2 class="section-title hidden">Engineering Experience</h2>
+        <div class="experience-container">
+            
+            <div class="experience-card hidden">
+                <div class="exp-header">
+                    <h3 class="accent-text">Data Analyst Intern</h3>
+                    <span class="exp-date">May 2025 - Aug 2025</span>
+                </div>
+                <h4>Pulsenics Inc. | Toronto, ON</h4>
+                <ul>
+                    <li>Developed an automated DRT (Distribution of Relaxation Times) analysis application using Python.</li>
+                    <li>Built a GBR machine learning model to predict average electrochemical cell capacities with an accuracy of 85%+.</li>
+                    <li>Developed Python/Pandas scripts to efficiently automate 10000+ lines of electrochemical data.</li>
+                </ul>
+                <div class="tech-tags">
+                    <span>Python</span><span>Pandas</span><span>Machine Learning</span>
+                </div>
+            </div>
+
+            <div class="experience-card hidden">
+                <div class="exp-header">
+                    <h3 class="accent-text">Operations Volunteer</h3>
+                    <span class="exp-date">Jan 2025 - April 2025</span>
+                </div>
+                <h4>Pulsenics Inc. | Toronto, ON</h4>
+                <ul>
+                    <li>Utilized outreach tools like Apollo and LinkedIn Sales Navigator to prospect potential leads.</li>
+                    <li>Initiated the exploration of a potential new market in the electrochemical industry.</li>
+                    <li>Used advanced Excel formulae to tabulate and format 200+ potential leads.</li>
+                </ul>
+                <div class="tech-tags">
+                    <span>Data Analysis</span><span>Excel</span><span>Market Research</span>
+                </div>
+            </div>
+
+            <div class="experience-card hidden">
+                <div class="exp-header">
+                    <h3 class="accent-text">Website Maintenance Developer</h3>
+                    <span class="exp-date">Jan 2021 - Sep 2024</span>
+                </div>
+                <h4>GTA Photo 3D Real Estate Photography | Toronto, ON</h4>
+                <ul>
+                    <li>Managed and maintained a professional portfolio website, ensuring optimal performance with SEO optimization.</li>
+                    <li>Integrated responsive pages and interactive image galleries with CSS, HTML, and JavaScript.</li>
+                </ul>
+                <div class="tech-tags">
+                    <span>HTML/CSS</span><span>JavaScript</span><span>SEO</span>
+                </div>
+            </div>
+
+            <h2 class="section-title hidden" style="margin-top: 2rem;">Technical Projects</h2>
+
+            <div class="experience-card hidden">
+                <div class="exp-header">
+                    <h3 class="accent-text">Altf4 (Compiler)</h3>
+                    <span class="exp-date">Personal Project</span>
+                </div>
+                <h4>Python</h4>
+                <ul>
+                    <li>Developed a basic programming language utilizing a Python-based compiler.</li>
+                    <li>Engineered custom debugging messages, error prompts, and core functionalities including variable assignment and print commands to understand low-level execution.</li>
+                </ul>
+                <div class="tech-tags">
+                    <span>Python</span><span>Compiler Design</span><span>Backend Logic</span>
+                </div>
+            </div>
+
+            <div class="experience-card hidden">
+                <div class="exp-header">
+                    <h3 class="accent-text">Spin to Win Arcade Game</h3>
+                    <span class="exp-date">Hardware Project</span>
+                </div>
+                <h4>Verilog / DE1-SoC</h4>
+                <ul>
+                    <li>Built a fully functional hardware-based arcade wheel game featuring three distinct difficulty levels.</li>
+                    <li>Programmed in Quartus Prime using Verilog, implementing menu FSM (Finite State Machine) logic directly onto a DE1-SoC Board.</li>
+                </ul>
+                <div class="tech-tags">
+                    <span>Verilog</span><span>Quartus Prime</span><span>Hardware FSM</span>
+                </div>
+            </div>
+
+            <div class="experience-card hidden">
+                <div class="exp-header">
+                    <h3 class="accent-text">Skikai Desktop</h3>
+                    <span class="exp-date">Personal Project</span>
+                </div>
+                <h4>Python</h4>
+                <ul>
+                    <li>A proactive AI companion with multi-modal LLM integration for full desktop control.</li>
+                    <li>Uses local TTS, screen vision, and API calls to speak, react to on-screen events, write programs, and solve technical problems with ~1 second latency.</li>
+                </ul>
+                <div class="tech-tags">
+                    <span>Python</span><span>LLM APIs</span><span>TTS</span>
+                </div>
+            </div>
+
+            <div class="experience-card hidden">
+                <div class="exp-header">
+                    <h3 class="accent-text">SkikaiOS</h3>
+                    <span class="exp-date">Personal Project</span>
+                </div>
+                <h4>Python / Unity / Quest 3</h4>
+                <ul>
+                    <li>A modular AR companion OS for Meta Quest 3 built for low-latency spatial intelligence.</li>
+                    <li>Entirely LLM-driven — skills are Python modules that the system auto-registers and executes dynamically, replacing hardcoded logic.</li>
+                </ul>
+                <div class="tech-tags">
+                    <span>Python</span><span>Unity</span><span>AR/XR</span><span>LLM</span>
+                </div>
+            </div>
+
+            <div class="experience-card hidden">
+                <div class="exp-header">
+                    <h3 class="accent-text">MatScanner</h3>
+                    <span class="exp-date">Personal Project</span>
+                </div>
+                <h4>Python / HTML / JavaScript</h4>
+                <ul>
+                    <li>A tool for civil engineers and project managers to reduce scrap waste in material cutting.</li>
+                    <li>Uses a 1D bin packing algorithm to optimize cuts, providing stock prices, cost estimates, and part specifications through a clean UI.</li>
+                </ul>
+                <div class="tech-tags">
+                    <span>Python</span><span>HTML/JS</span><span>Algorithms</span>
+                </div>
+            </div>
+
+            <div class="experience-card hidden">
+                <div class="exp-header">
+                    <h3 class="accent-text">Toronto GIS Mapping Software</h3>
+                    <span class="exp-date">Systems Engineering Project</span>
+                </div>
+                <h4>University of Toronto</h4>
+                <ul>
+                    <li>Created a foundational mapping software for the city of Toronto using EZGL for the GUI and vanilla C++ for the backend.</li>
+                    <li>Features a search function, street/intersection data extraction, and rendering of POIs.</li>
+                </ul>
+                <div class="tech-tags">
+                    <span>C++</span><span>EZGL</span><span>Data Structures</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <h3 class="accent-text" style="margin-bottom: 1rem;">Let's Connect</h3>
+            <div class="social-links">
+                <a href="mailto:adam.shaltout@mail.utoronto.ca" class="footer-link">Email</a>
+                <a href="https://www.linkedin.com/in/adam-shaltout-59a3a9332/" target="_blank" class="footer-link">LinkedIn</a>
+                <a href="https://github.com/dimos1234" target="_blank" class="footer-link">GitHub</a>
+            </div>
+            <p style="margin-top: 2rem; opacity: 0.5;">
+                &copy; 2026 Adam Shaltout. Engineered in Toronto. 
+                <span style="cursor: help; opacity: 0.2;" title="↑ ↑ ↓ ↓ ← → ← → B A"> ↑ ↑ ↓ ↓ ← → ← → B A</span>
+            </p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam Shaltout | Art & Lifestyle</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Adam Shaltout</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Professional</a></li>
+            <li><a href="games.html">Games & Devlogs</a></li>
+            <li><a href="creative.html">Art & Lifestyle</a></li>
+            <li><button id="vocal-toggle" class="btn primary-btn" style="padding: 0.4rem 1rem;">[ 01 ] Mode</button></li>
+        </ul>
+    </nav>
+
+    <section class="section" id="art">
+        <h2 class="section-title hidden">The Digital Canvas</h2>
+        <div class="card hidden">
+            <h3 class="accent-text">Sketches & 2D Sprites</h3>
+            <p style="margin-bottom: 2rem;">Drawing is a relatively new passion of mine, but it has quickly become central to my game development process. I create all the custom 2D artwork and sprites for my projects from scratch. This space is a growing gallery of my digital illustrations, character designs, and rough sketches.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <img src="assets/images/skikai.png" alt="digital art" class="art-img hidden">
+                <img src="assets/images/birdbrain-teto.png" alt="digital art" class="art-img hidden">
+                <img src="assets/images/miku-pose.png" alt="digital art" class="art-img hidden">
+            </div>
+        </div>
+    </section>
+
+    <section class="section alt-bg" id="lifestyle">
+        <h2 class="section-title hidden">Beyond the Screen</h2>
+        <div class="grid-container">
+            
+            <div class="card hidden" style="border-top-color: var(--action-red);">
+                <h3 style="color: var(--action-red); margin-bottom: 1rem;">Martial Arts</h3>
+                <p>I competed internationally in Wushu/Kung Fu growing up and placed 3rd at worlds. These days I'm into tricking and calisthenics — still chasing flips, just without the scoring.</p>
+            </div>
+
+            <div class="card hidden" style="border-top-color: var(--action-red);">
+                <h3 style="color: var(--action-red); margin-bottom: 1rem;">Music & Games</h3>
+                <p>Outside of coding, I'm usually playing games, watching anime, or at the piano. I like picking apart fast Vocaloid songs by ear and figuring them out on keys.</p>
+            </div>
+
+            <div class="card hidden" style="border-top-color: var(--action-red);">
+                <h3 style="color: var(--action-red); margin-bottom: 1rem;">Keyboards & Cubing</h3>
+                <p>I speedcube and build custom mechanical keyboards. There's something satisfying about taking things apart, modding them, and dialing in exactly how they feel.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <h3 class="accent-text" style="margin-bottom: 1rem;">Let's Connect</h3>
+            <div class="social-links">
+                <a href="mailto:adam.shaltout@mail.utoronto.ca" class="footer-link">Email</a>
+                <a href="https://www.linkedin.com/in/adam-shaltout-59a3a9332/" target="_blank" class="footer-link">LinkedIn</a>
+                <a href="https://github.com/dimos1234" target="_blank" class="footer-link">GitHub</a>
+            </div>
+            <p style="margin-top: 2rem; opacity: 0.5;">
+                &copy; 2026 Adam Shaltout. Engineered in Toronto. 
+                <span style="cursor: help; opacity: 0.2;" title="↑ ↑ ↓ ↓ ← → ← → B A"> [ ? ]</span>
+            </p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+
+</body>
+</html>
