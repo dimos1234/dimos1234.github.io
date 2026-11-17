@@ -1,74 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adam Shaltout | Games & Devlogs</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<meta name="description" content="Adam Shaltout: software engineering, CUDA, indie games and digital art. A playable pixel-art portfolio.">
+<title>Adam Shaltout | Games & Devlogs</title>
+<link rel="stylesheet" href="styles.css"><link rel="preload" href="assets/battle/soul-mono.ttf" as="font" type="font/ttf" crossorigin>
+<script type="module" src="script.js"></script>
 </head>
-<body>
-
-    <nav class="navbar">
-        <div class="logo">Adam Shaltout</div>
-        <ul class="nav-links">
-            <li><a href="index.html">Professional</a></li>
-            <li><a href="games.html">Games & Devlogs</a></li>
-            <li><a href="creative.html">Art & Lifestyle</a></li>
-            <li><button id="vocal-toggle" class="btn primary-btn" style="padding: 0.4rem 1rem;">[ 01 ] Mode</button></li>
-        </ul>
-    </nav>
-
-    <section class="section" id="arcade">
-        <h2 class="section-title hidden">Indie Development</h2>
-        <div class="grid-container">
-            
-            <div class="card hidden">
-                <h3 class="accent-text">I Wish I Was A Cat</h3>
-                <h4 style="margin-bottom: 1rem; color: #666;">Unity / C#</h4>
-                <p>A narrative-driven horror game exploring themes of grief and procrastination. It features custom, self-drawn 2D artwork and sprites. The core mechanic incorporates seamless travel between 2D and 3D planes, creating a disorienting, inception-style feeling.</p>
-                <br>
-                <button class="btn primary-btn" disabled style="opacity: 0.6; cursor: not-allowed;">[ In Development ]</button>
-            </div>
-
-            <div class="card hidden" style="border-top-color: var(--action-red);">
-                <h3 style="color: var(--action-red);">Project: Skikai</h3>
-                <h4 style="margin-bottom: 1rem; color: #666;">AI / LLM Integration</h4>
-                <p>An experimental, personality-driven AI companion. Currently in early development, this project explores dynamic conversational states to create a highly responsive, "living" entity that breaks away from traditional bot interactions.</p>
-                <br>
-                <a href="https://github.com/dimos1234/Skikai-Dektop" target="_blank" class="btn secondary-btn">[ View on GitHub ]</a>
-            </div>
-
-        </div>
-    </section>
-
-    <section class="section alt-bg">
-        <h2 class="section-title hidden">Documenting the Process</h2>
-        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-            <p class="hidden" style="margin-bottom: 2rem;">Watch my latest devlogs where I break down the coding mechanics behind my projects, share my 2D/3D design process, and document the hands-on journey of building my own games from scratch.</p>
-            
-            <div class="hidden" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 4px solid var(--accent-teal);">
-                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/MXx1YIIhuWM" title="Trying to make a game with NO EXPERIENCE (kinda)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-            
-        </div>
-    </section>
-
-    <footer class="site-footer">
-        <div class="footer-content">
-            <h3 class="accent-text" style="margin-bottom: 1rem;">Let's Connect</h3>
-            <div class="social-links">
-                <a href="mailto:adam.shaltout@mail.utoronto.ca" class="footer-link">Email</a>
-                <a href="https://www.linkedin.com/in/adam-shaltout-59a3a9332/" target="_blank" class="footer-link">LinkedIn</a>
-                <a href="https://github.com/dimos1234" target="_blank" class="footer-link">GitHub</a>
-            </div>
-            <p style="margin-top: 2rem; opacity: 0.5;">
-                &copy; 2026 Adam Shaltout. Engineered in Toronto. 
-                <span style="cursor: help; opacity: 0.2;" title="↑ ↑ ↓ ↓ ← → ← → B A"> [ ? ]</span>
-            </p>
-        </div>
-    </footer>
-    <script src="script.js"></script>
-
+<body data-start="games">
+<main>
+<h1 class="sr-only">Adam Shaltout: a playable portfolio</h1>
+<div id="screen-wrap"><canvas id="battle" width="640" height="480" tabindex="0" role="img" aria-label="A pixel-art battle with Adam Shaltout. Arrow keys move, Z confirms, X goes back."></canvas><nav id="accessible-menu" aria-label="Current battle options"></nav></div>
+<p id="status" role="status" aria-live="polite" class="sr-only">Loading Adam's portfolio.</p>
+<p class="key-guide">↑ ↓ ← → MOVE <span>Z</span> SELECT <span>X</span> BACK <span>M</span> MUTE</p>
+<div class="utilities"><button id="sound" type="button" aria-pressed="true">SOUND: ON [M]</button><button id="fullscreen" type="button">FULLSCREEN</button><button id="quick" type="button">QUICK PORTFOLIO</button></div>
+<p class="song-credit">Rakuichi Buster, Toby Fox</p>
+<audio id="battle-music" src="assets/audio/rakuichi-buster.m4a" loop preload="auto"></audio>
+<div class="touch-controls" aria-label="Touch controls"><div class="dpad"><button data-key="ArrowUp" aria-label="Up">↑</button><button data-key="ArrowLeft" aria-label="Left">←</button><button data-key="ArrowDown" aria-label="Down">↓</button><button data-key="ArrowRight" aria-label="Right">→</button></div><button class="touch-action" data-key="x" aria-label="Back">X</button><button class="touch-action" data-key="z" aria-label="Select">Z</button></div>
+<p id="load-error" hidden>Something could not load. <button id="retry" type="button">RETRY</button> <button id="fallback" type="button">READ PORTFOLIO</button></p>
+<noscript><p>This encounter uses JavaScript. Visit <a href="https://github.com/dimos1234">Adam's GitHub</a> or <a href="mailto:adam.shaltout@mail.utoronto.ca">email Adam</a>.</p></noscript>
+</main>
+<dialog id="reader" aria-labelledby="reader-title"><div class="reader-header"><h2 id="reader-title">Adam Shaltout</h2><button id="reader-close" type="button" aria-label="Close portfolio">X CLOSE</button></div><div id="reader-content"></div></dialog>
 </body>
 </html>
