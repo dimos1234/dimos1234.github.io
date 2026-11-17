@@ -101,16 +101,19 @@
 
             <div class="experience-card hidden">
                 <div class="exp-header">
-                    <h3 class="accent-text">Altf4 (Compiler)</h3>
+                    <h3 class="accent-text">Flash Attention</h3>
                     <span class="exp-date">Personal Project</span>
                 </div>
-                <h4>Python</h4>
+                <h4>C++ / CUDA</h4>
                 <ul>
-                    <li>Developed a basic programming language utilizing a Python-based compiler.</li>
-                    <li>Engineered custom debugging messages, error prompts, and core functionalities including variable assignment and print commands to understand low-level execution.</li>
+                    <li>Implemented a tiled Flash Attention forward-pass CUDA kernel using shared memory and online softmax to avoid materializing quadratic attention matrices.</li>
+                    <li>Achieved a 1.26× speedup and 11.5× reduction in peak GPU memory versus a naive CUDA baseline at sequence length 2048 in FP32.</li>
                 </ul>
-                <div class="tech-tags">
-                    <span>Python</span><span>Compiler Design</span><span>Backend Logic</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;">
+                    <div class="tech-tags">
+                        <span>C++</span><span>CUDA</span><span>GPU Computing</span><span>Online Softmax</span>
+                    </div>
+                    <a href="https://github.com/dimos1234/Flash-Attention" target="_blank" class="btn secondary-btn" style="padding: 0.4rem 0.8rem; font-size: 0.6rem;">[ GitHub ]</a>
                 </div>
             </div>
 
@@ -191,31 +194,13 @@
                 <h4>Python / Unity / Quest 3</h4>
                 <ul>
                     <li>A modular AR companion OS for Meta Quest 3 built for low-latency spatial intelligence.</li>
-                    <li>Entirely LLM-driven — skills are Python modules that the system auto-registers and executes dynamically, replacing hardcoded logic.</li>
+                    <li>Entirely LLM-driven: skills are Python modules that the system auto-registers and executes dynamically, replacing hardcoded logic.</li>
                 </ul>
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;">
                     <div class="tech-tags">
                         <span>Python</span><span>Unity</span><span>AR/XR</span><span>LLM</span>
                     </div>
                     <a href="https://github.com/dimos1234/SkikaiOS" target="_blank" class="btn secondary-btn" style="padding: 0.4rem 0.8rem; font-size: 0.6rem;">[ GitHub ]</a>
-                </div>
-            </div>
-
-            <div class="experience-card hidden">
-                <div class="exp-header">
-                    <h3 class="accent-text">MatScanner</h3>
-                    <span class="exp-date">Personal Project</span>
-                </div>
-                <h4>Python / HTML / JavaScript</h4>
-                <ul>
-                    <li>A tool for civil engineers and project managers to reduce scrap waste in material cutting.</li>
-                    <li>Uses a 1D bin packing algorithm to optimize cuts, providing stock prices, cost estimates, and part specifications through a clean UI.</li>
-                </ul>
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;">
-                    <div class="tech-tags">
-                        <span>Python</span><span>HTML/JS</span><span>Algorithms</span>
-                    </div>
-                    <a href="https://github.com/dimos1234/MatScanner" target="_blank" class="btn secondary-btn" style="padding: 0.4rem 0.8rem; font-size: 0.6rem;">[ GitHub ]</a>
                 </div>
             </div>
 
