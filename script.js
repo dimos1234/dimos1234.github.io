@@ -1,8 +1,8 @@
 import {text,center} from "./pixel-font.js";
-import {SpritePlayer} from "./sprites.js";
-import {BattleAudio} from "./audio.js?v=20261117-flow2";
+import {SpritePlayer} from "./sprites.js?v=20261117-boss3";
+import {BattleAudio} from "./audio.js?v=20261117-mobile4";
 import {profile,collections,experience,projects,games,art,life} from "./content.js";
-import {clamp,attackPosition,attackResult,fitScale,availableActionCount,ENCOUNTER_LINES,hitReactionLines,arrowsNavigate,contentPages} from "./battle-core.js?v=20261117-flow2";
+import {clamp,attackPosition,attackResult,fitScale,availableActionCount,ENCOUNTER_LINES,hitReactionLines,arrowsNavigate,contentPages,DEFEAT_LINES,BOSS_MAX_HP,applyDamage} from "./battle-core.js?v=20261117-mobile4";
 
 const canvas=document.getElementById("battle"), ctx=canvas.getContext("2d");
 const status=document.getElementById("status"), accessible=document.getElementById("accessible-menu");
@@ -12,7 +12,7 @@ const labels=["FIGHT","ACT","ITEM","MERCY"];
 const actionX=[32,185,345,500];
 const heartRows=["01100110","11111111","11111111","11111111","01111110","00111100","00011000","00000000"];
 const stack=[];
-const state={mode:"loading",age:0,total:0,root:0,index:0,title:"",options:[],page:0,pages:[],entry:null,listKey:null,unlocked:false,hasAttacked:false,damage:0,perfect:false,hp:20,bossHp:100,hitAge:Infinity,heart:{x:312,y:308},invulnerable:0,reveal:false};
+const state={mode:"loading",age:0,total:0,root:0,index:0,title:"",options:[],page:0,pages:[],entry:null,listKey:null,unlocked:false,hasAttacked:false,damage:0,perfect:false,hp:20,bossHp:BOSS_MAX_HP,hitAge:Infinity,hitDuration:0,dustDuration:0,turn:0,dialogueLocked:false,heart:{x:312,y:308},invulnerable:0,reveal:false};
 let ready=false,last=null,hitAreas=[],lastAnnouncement="",lastTypeCount=0;
 let rootLines=[...ENCOUNTER_LINES];
 
@@ -28,12 +28,12 @@ function mirror(){
  else if(state.mode==="detail"){const prompt=state.page===state.pages.length-1&&(state.entry.image||state.entry.url);add("Next page or open project",confirm,{x:44,y:263,w:552,h:prompt?34:96});add("Back",back,prompt?{x:44,y:299,w:552,h:32}:{x:44,y:360,w:100,h:22});}
  else if(state.mode==="dialogue"){add("Continue",confirm);}
 }
-function mode(name){state.mode=name;canvas.dataset.mode=name;audio.setEffectsMuted(name==="defense");state.age=0;state.reveal=false;lastTypeCount=0;mirror();}
+function mode(name){state.mode=name;canvas.dataset.mode=name;document.getElementById("mobile-note").hidden=!["boot","loading"].includes(name);audio.setEffectsMuted(name==="defense");state.age=0;state.reveal=false;lastTypeCount=0;mirror();}
 function capture(){return {mode:state.mode,root:state.root,index:state.index,title:state.title,options:state.options,page:state.page,pages:state.pages,entry:state.entry,listKey:state.listKey};}
 function restore(snapshot){Object.assign(state,snapshot);canvas.dataset.mode=state.mode;audio.setEffectsMuted(state.mode==="defense");state.age=0;state.reveal=true;mirror();announce(state.mode==="list"?state.title+". "+state.options[state.index]?.label:rootLines.join(" "));}
 function list(title,options,{key=null,push=true,index=0}={}){if(push)stack.push(capture());state.title=title;state.options=options;state.index=index;state.listKey=key;mode("list");announce(title+". "+options.map(o=>o.label).join(", "));}
 function root(lines){if(lines)rootLines=lines;mode("root");announce(rootLines.join(" ")+(availableActionCount(state.unlocked,state.hasAttacked)===1?" Choose FIGHT.":" Use FIGHT, ACT, ITEM or MERCY."));}
-function begin(){if(!ready)return;audio.resetMusic();stack.length=0;state.unlocked=false;state.hasAttacked=false;state.hp=20;state.bossHp=100;state.hitAge=Infinity;state.root=0;state.damage=0;sprites.play("entrance");root([...ENCOUNTER_LINES]);audio.play("start");}
+function begin(){if(!ready)return;audio.resetMusic();try{sessionStorage.removeItem("adam-defeated");}catch{}held.clear();stack.length=0;state.unlocked=false;state.hasAttacked=false;state.hp=20;state.bossHp=BOSS_MAX_HP;state.turn=0;state.hitAge=Infinity;state.root=0;state.damage=0;sprites.play("entrance");root([...ENCOUNTER_LINES]);audio.play("start");}
 function openCollection(key){const entries=collections[key];if(!entries)return;list({projects:"TECHNICAL PROJECTS",experience:"ENGINEERING EXPERIENCE",games:"GAMES & DEVLOGS",art:"ART & SPRITES",life:"BEYOND THE SCREEN"}[key],entries.map((entry,index)=>({label:entry.title==="AI/ML Engineering Intern"?"AI/ML Intern":entry.title,action:()=>detail(entry)})),{key});}
 function actMenu(){list("ACT / ADAM SHALTOUT",[
  {label:"Check Adam",action:()=>detail({title:"Adam Shaltout",stack:"Software engineer / Creator",paragraphs:[profile.intro,"Currently back at university after completing an Applied AI/ML Engineering internship at Pulsenics in August 2026."]})},
@@ -51,7 +51,7 @@ function itemMenu(){list("ITEM",[
  ]);}
 function mercyMenu(){list("MERCY",[
  {label:"Spare",action:()=>{state.unlocked=true;stack.length=0;state.root=1;root(["* You spare Adam.","* He offers you a tour. Choose ACT."]);}},
- {label:"Read Portfolio",action:()=>openReader()},
+ {label:"View Portfolio",action:()=>visitPortfolio()},
  {label:"Replay Encounter",action:begin}
  ]);}
 function rootAction(){
@@ -62,13 +62,24 @@ function rootAction(){
  if(state.root===2)itemMenu();
  if(state.root===3)mercyMenu();
 }
-function startAttack(){audio.play("confirm");mode("attack");announce("The attack indicator bounces indefinitely. Press Z to strike. Every hit lands.");}
-function strike(){const first=!state.unlocked;const result=attackResult(attackPosition(state.age));Object.assign(state,result);state.hasAttacked=true;state.bossHp=Math.max(1,state.bossHp-result.damage);state.hitAge=0;state.strikeX=attackPosition(state.age);sprites.play(result.perfect?"perfect":"hit");audio.startMusic();audio.play(result.perfect?"perfect":"strike");if(first)startDefense();else finishAttack();}
-function startDefense(){state.heart={x:312,y:308};state.invulnerable=0;mode("defense");announce("Move your heart with the arrow keys for six seconds.");}
-function finishAttack(){state.unlocked=true;try{sessionStorage.setItem("adam-encounter-complete","1");}catch{}stack.length=0;state.root=1;root(hitReactionLines(state.perfect));}
-function dialogue(lines,done){state.lines=lines;state.done=done;mode("dialogue");announce(lines.join(" "));}
+function startAttack(){audio.play("confirm");audio.startMusic();mode("attack");announce("The attack indicator bounces indefinitely. Press Z to strike. Every hit lands.");}
+function strike(){
+ const result=attackResult(attackPosition(state.age));Object.assign(state,result);state.hasAttacked=true;state.turn++;state.bossHp=applyDamage(state.bossHp,result.damage);state.hitAge=0;
+ const animation=result.perfect?"perfect":"hit",sound=result.perfect?"perfect":"strike";
+ state.hitDuration=Math.max(sprites.duration(animation),audio.effectDuration(sound));
+ mode("hit");sprites.play(animation);audio.play(sound);announce("You deal "+state.damage+" damage. Adam reacts.");
+}
+function afterHit(){
+ if(state.bossHp===0){audio.resetMusic();sprites.play("defeat");dialogue(DEFEAT_LINES,startDust,{locked:true});}
+ else dialogue(hitReactionLines(state.perfect),startDefense,{locked:true});
+}
+function startDefense(){held.clear();state.heart={x:312,y:308};state.invulnerable=0;mode("defense");announce("Move your heart with the arrow keys for six seconds.");}
+function finishAttack(){state.unlocked=true;try{sessionStorage.setItem("adam-encounter-complete","1");}catch{}stack.length=0;state.root=1;root(["* Take a look around. Choose ACT."]);}
+function startDust(){mode("dust");sprites.play("death");state.dustDuration=Math.max(sprites.duration("death"),audio.effectDuration("dust"))+250;audio.play("dust");announce("Adam turns into pixel dust. Opening the portfolio.");}
+function visitPortfolio(defeated=false){audio.resetMusic();if(defeated){try{sessionStorage.setItem("adam-defeated","1");}catch{}mode("leaving");location.replace("portfolio/index.html");}else location.assign("portfolio/index.html");}
+function dialogue(lines,done,{locked=false}={}){state.lines=lines;state.done=done;state.dialogueLocked=locked;mode("dialogue");announce(lines.join(" "));}
 function detail(entry){stack.push(capture());state.entry=entry;state.title=entry.title;state.page=0;state.pages=contentPages(entry);mode("detail");announce(state.pages[0].join(" "));}
-function back(){if(state.mode==="attack"||state.mode==="defense"||state.mode==="boot")return;audio.play("cancel");if(stack.length)restore(stack.pop());else root();}
+function back(){if(["attack","hit","defense","dust","leaving","boot"].includes(state.mode)||(state.mode==="dialogue"&&state.dialogueLocked))return;audio.play("cancel");if(stack.length)restore(stack.pop());else root();}
 function openLink(url){window.open(url,"_blank","noopener,noreferrer");}
 function pageText(){return state.mode==="detail"?state.pages[state.page]:state.mode==="dialogue"?state.lines:rootLines;}
 function fullyTyped(){return state.reveal||state.age>=pageText().join("").length*17;}
@@ -86,7 +97,7 @@ function input(key,repeat=false){
  audio.activate();
  if(key==="m"){if(!repeat)toggleSound();return;}
  if(reader.open){if(key==="x"||key==="Escape"){reader.close();canvas.focus();}return;}
- if(state.mode==="defense")return;
+ if(["hit","defense","dust","leaving"].includes(state.mode))return;
  if(key==="z"||key==="Enter"){if(!repeat)confirm();return;}
  if(key==="x"||key==="Escape"){if(state.mode==="dialogue"&&!fullyTyped())state.reveal=true;else back();return;}
  if(!key.startsWith("Arrow")||!arrowsNavigate(state.mode))return;
@@ -108,7 +119,7 @@ function openReader(title="Adam Shaltout",groups=null,single=null){
 }
 function box(x=32,y=250,w=576,h=135){ctx.fillStyle="#fff";ctx.fillRect(x,y,w,h);ctx.fillStyle="#000";ctx.fillRect(x+5,y+5,w-10,h-10);}
 function heart(x,y,color="#f00",size=2){ctx.fillStyle=color;heartRows.forEach((row,iy)=>{for(let ix=0;ix<8;ix++)if(row[ix]==="1")ctx.fillRect(Math.round(x)+ix*size,Math.round(y)+iy*size,size,size);});}
-function enemyHud(){text(ctx,"LV 20",226,232,{sx:1,sy:1});text(ctx,"HP",274,232,{sx:1,sy:1});ctx.fillStyle="#601111";ctx.fillRect(292,231,92,8);ctx.fillStyle="#33ff33";ctx.fillRect(292,231,Math.round(92*state.bossHp/100),8);text(ctx,state.bossHp+"/100",392,232,{sx:1,sy:1});}
+function enemyHud(){text(ctx,"LV 20",226,232,{sx:1,sy:1});text(ctx,"HP",274,232,{sx:1,sy:1});ctx.fillStyle="#601111";ctx.fillRect(292,231,92,8);ctx.fillStyle="#33ff33";ctx.fillRect(292,231,Math.round(92*state.bossHp/BOSS_MAX_HP),8);text(ctx,state.bossHp+"/"+BOSS_MAX_HP,392,232,{sx:1,sy:1});}
 function hitEffect(){if(state.hitAge>=900)return;const rise=Math.min(20,Math.floor(state.hitAge/45));text(ctx,String(state.damage),304,102-rise,{sx:3,sy:4,color:state.perfect?"#ffff00":"#f44"});if(state.hitAge<120){ctx.fillStyle="#fff";for(let s=0;s<13;s++)ctx.fillRect(295+s*3,70+s*8,5,10);}}
 function lines(values,{typed=true}={}){const count=Math.min(values.join("").length,Math.floor(state.age/17));if(typed&&!state.reveal&&count>lastTypeCount)audio.play("text");lastTypeCount=count;let remaining=state.reveal||!typed?Infinity:count;for(let i=0;i<Math.min(values.length,3);i++){const value=values[i];text(ctx,value.slice(0,Math.max(0,remaining)),54,272+i*30);remaining-=value.length;}}
 function actionIcon(i,x,y,color){ctx.fillStyle=color;if(i===0){for(let n=0;n<9;n++)ctx.fillRect(x+12-n,y+n*2,3,4);ctx.fillRect(x+1,y+13,14,2);}else if(i===1){ctx.fillRect(x+1,y+7,3,5);ctx.fillRect(x+6,y+3,3,13);ctx.fillRect(x+11,y,3,19);}else if(i===2){ctx.fillRect(x+4,y+3,10,15);ctx.fillStyle="#000";ctx.fillRect(x+7,y+7,4,7);ctx.fillStyle=color;ctx.fillRect(x+3,y,4,3);}else{ctx.fillRect(x+3,y,2,20);ctx.fillRect(x+9,y,2,20);ctx.fillRect(x,y+5,14,2);}}
@@ -132,7 +143,7 @@ function render(){
  ctx.imageSmoothingEnabled=false;ctx.fillStyle="#000";ctx.fillRect(0,0,640,480);hitAreas=[];
  if(["loading","boot"].includes(state.mode))drawIntro();
  else{
-  sprites.draw(ctx,{y:0});enemyHud();
+  sprites.draw(ctx,{y:0});if(state.mode!=="dust"&&state.mode!=="leaving")enemyHud();
   if(state.mode==="defense")drawDefense();
   else{
    box();
@@ -145,31 +156,33 @@ function render(){
   }
   hitEffect();hud();drawActions();
  }
- canvas.dataset.mode=state.mode;canvas.dataset.animation=sprites.name;canvas.dataset.frame=String(sprites.frame);canvas.dataset.damage=String(state.damage);canvas.dataset.unlocked=String(state.unlocked);canvas.dataset.selection=String(state.index);canvas.dataset.page=String(state.page);canvas.dataset.list=state.listKey||"";canvas.dataset.root=String(state.root);canvas.dataset.bossLevel="20";canvas.dataset.bossHp=String(state.bossHp);
+ canvas.dataset.mode=state.mode;canvas.dataset.animation=sprites.name;canvas.dataset.frame=String(sprites.frame);canvas.dataset.damage=String(state.damage);canvas.dataset.unlocked=String(state.unlocked);canvas.dataset.selection=String(state.index);canvas.dataset.page=String(state.page);canvas.dataset.list=state.listKey||"";canvas.dataset.root=String(state.root);canvas.dataset.bossLevel="20";canvas.dataset.bossHp=String(state.bossHp);canvas.dataset.turn=String(state.turn);
 }
 function update(dt){
  state.total+=dt;state.age+=dt;state.hitAge+=dt;sprites.update(dt);
+ if(state.mode==="hit"&&state.age>=state.hitDuration)afterHit();
+ if(state.mode==="dust"&&state.age>=state.dustDuration)visitPortfolio(true);
  if(state.mode==="defense"){
   const rate=dt*.18,dx=(held.has("ArrowRight")?1:0)-(held.has("ArrowLeft")?1:0),dy=(held.has("ArrowDown")?1:0)-(held.has("ArrowUp")?1:0);
   const length=Math.hypot(dx,dy)||1;state.heart.x=clamp(state.heart.x+dx/length*rate,245,379);state.heart.y=clamp(state.heart.y+dy/length*rate,257,362);state.invulnerable-=dt;
-  for(const b of defenseBullets())if(state.invulnerable<=0&&Math.abs(b.x-(state.heart.x+8))<8&&Math.abs(b.y-(state.heart.y+7))<8){state.hp=Math.max(1,state.hp-1);state.invulnerable=550;}
+  for(const b of defenseBullets())if(state.invulnerable<=0&&Math.abs(b.x-(state.heart.x+8))<8&&Math.abs(b.y-(state.heart.y+7))<8){state.hp=Math.max(1,state.hp-1);state.invulnerable=550;audio.play("hit");}
   if(state.age>6000)finishAttack();
  }
 }
 function tick(now){const dt=last===null?0:Math.min(60,now-last);last=now;if(!document.hidden&&!reader.open)update(dt);render();requestAnimationFrame(tick);}
-function resize(){const touch=matchMedia("(max-width:639px),(pointer:coarse)").matches;const scale=fitScale(innerWidth-16,innerHeight-(touch?210:120));document.documentElement.style.setProperty("--game-scale",scale);}
+function resize(){const touch=matchMedia("(max-width:639px),(pointer:coarse)").matches;const scale=fitScale(innerWidth-16,touch?Math.max(240,innerHeight-280):innerHeight-120);document.documentElement.style.setProperty("--game-scale",scale);}
 function pointer(event){const rect=canvas.getBoundingClientRect();const x=(event.clientX-rect.left)*640/rect.width,y=(event.clientY-rect.top)*480/rect.height;audio.activate();canvas.focus();if(state.mode==="attack"&&y<420){strike();return;}const hit=hitAreas.find(area=>x>=area.x&&x<=area.x+area.w&&y>=area.y&&y<=area.y+area.h);if(hit)hit.action();}
 canvas.addEventListener("pointerdown",pointer);
 document.addEventListener("keydown",event=>{if(event.target.closest("input,textarea,select"))return;const k=event.key.length===1?event.key.toLowerCase():event.key;if(k==="Enter"&&event.target.closest("button,a,summary"))return;if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","z","x","m","Enter","Escape"].includes(k)){event.preventDefault();held.add(k);input(k,event.repeat);}});
 document.addEventListener("keyup",event=>held.delete(event.key));
 window.addEventListener("blur",()=>held.clear());document.addEventListener("visibilitychange",()=>{last=null;held.clear();});window.addEventListener("resize",resize);
 document.querySelectorAll("[data-key]").forEach(button=>{button.addEventListener("pointerdown",event=>{event.preventDefault();const k=button.dataset.key;held.add(k);button.setPointerCapture(event.pointerId);input(k);});for(const event of ["pointerup","pointercancel","lostpointercapture"])button.addEventListener(event,()=>held.delete(button.dataset.key));});
-document.getElementById("quick").addEventListener("click",()=>openReader());
+document.getElementById("quick").addEventListener("click",()=>visitPortfolio());
 document.getElementById("reader-close").addEventListener("click",()=>{reader.close();canvas.focus();});
 function toggleSound(){const enabled=audio.toggle();const button=document.getElementById("sound");button.textContent="SOUND: "+(enabled?"ON":"OFF")+" [M]";button.setAttribute("aria-pressed",String(enabled));audio.play("confirm");announce("Sound "+(enabled?"on":"muted")+". Press M to toggle.");}
 document.getElementById("sound").addEventListener("click",toggleSound);
 document.getElementById("retry").addEventListener("click",()=>location.reload());
-document.getElementById("fallback").addEventListener("click",()=>openReader());
+document.getElementById("fallback").addEventListener("click",()=>visitPortfolio());
 reader.addEventListener("close",()=>canvas.focus());
 resize();requestAnimationFrame(tick);
-try{await sprites.load();ready=true;const direct=document.body.dataset.start||({"#engineering":"experience","#projects":"projects","#games":"games","#art":"art"})[location.hash];if(direct){state.unlocked=true;root();openCollection(direct);}else{let seen=false;try{seen=sessionStorage.getItem("adam-encounter-complete")==="1";}catch{}if(seen&&!new URLSearchParams(location.search).has("intro")){state.unlocked=true;state.root=1;root(["* Welcome back.","* Choose ACT to continue exploring."]);}else{mode("boot");announce("An unexpected encounter. Press Z to begin.");}}}catch(error){console.error("Sprite loading failed",error);document.getElementById("load-error").hidden=false;announce("Sprite loading failed. The readable portfolio is available below.");}
+try{let defeated=false;try{defeated=sessionStorage.getItem("adam-defeated")==="1";}catch{}if(defeated&&!new URLSearchParams(location.search).has("intro")){visitPortfolio(true);}else{await sprites.load();ready=true;const direct=document.body.dataset.start||({"#engineering":"experience","#projects":"projects","#games":"games","#art":"art"})[location.hash];if(direct){state.unlocked=true;root();openCollection(direct);}else{let seen=false;try{seen=sessionStorage.getItem("adam-encounter-complete")==="1";}catch{}if(seen&&!new URLSearchParams(location.search).has("intro")){state.unlocked=true;state.root=1;root(["* Welcome back.","* Choose ACT to continue exploring."]);}else{mode("boot");announce("An unexpected encounter. Press Z to begin.");}}}}catch(error){console.error("Sprite loading failed",error);document.getElementById("load-error").hidden=false;announce("Sprite loading failed. The static portfolio is available below.");}

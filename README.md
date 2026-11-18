@@ -10,11 +10,15 @@ python3 -m http.server 4173 --bind 127.0.0.1
 
 Open http://127.0.0.1:4173/?intro=1 to replay the opening.
 
-Arrow keys move/select, Z confirms/strikes, X goes back, and **M mutes or unmutes all audio**. Mouse and touch controls are also available. Sound is enabled by default; browsers unlock playback on the first interaction. Rakuichi Buster begins when the first attack lands.
+Arrow keys move/select, Z confirms/strikes, X goes back, and **M mutes or unmutes all audio**. Mouse and touch controls are also available. Sound is enabled by default; browsers unlock playback on the first interaction. Rakuichi Buster begins when Adam is selected in the FIGHT target pane, before the timing bar.
 
-Only FIGHT appears before the first hit. The timing bar bounces indefinitely and every hit succeeds. The first strike goes straight into Adam's six-second heart attack, with music but no sound effects. Adam's LV 20 and health stay beneath his sprite. After an attack, one dialogue box holds the hit reaction and the invitation to choose ACT.
+Only FIGHT appears before the first hit. The timing bar bounces indefinitely and every hit succeeds for 12–28 damage against 100 HP. Adam's LV 20 and health stay beneath his sprite. A strike plays its full animation and sound while the dialogue box stays empty. The reaction dialogue then waits for Z before Adam counterattacks. Every surviving hit gets a six-second heart-control turn, followed by the action menu. Music continues through that turn; only taking damage plays a sound effect. Movement and menu cues stay quiet.
 
-ACT opens the projects, experience, games, artwork and biography. Z advances dialogue; arrows only navigate menus or move the heart. Each final project or artwork prompt includes an X-to-return note. Quick Portfolio provides a readable view with real links.
+ACT opens the projects, experience, games, artwork and biography. Z advances dialogue; arrows only navigate menus or move the heart. Each final project or artwork prompt includes an X-to-return note.
+
+The final hit leads to Adam's defeat dialogue. Z starts the death sprite sequence and Undertale vaporizing sound, then opens the restored original website in `portfolio/`. **Skip Fight (Quick Portfolio)** goes directly to the same website. All three original pages and their design are restored; the archival backup is unchanged. Replay Battle on those pages starts a fresh encounter.
+
+On mobile, the opening says “Best experienced on a computer.” Touch controls replace the keyboard guide, Back/Select buttons have labels, and the 640×480 canvas scales to fit narrow phones without losing its aspect ratio. The battle and restored portfolio were checked at 320- and 390-pixel widths, including navigation, project cards and the art gallery.
 
 ## Checks
 

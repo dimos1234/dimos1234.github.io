@@ -18,7 +18,7 @@ test("only FIGHT is available until the first hit",()=>{
  assert.equal(availableActionCount(false,true),4);
  assert.equal(availableActionCount(true,false),4);
 });
-test("sound is enabled by default but music waits for the attack",()=>{
+test("sound is enabled by default but music waits for target selection",()=>{
  const {audio,music}=setup();assert.equal(audio.enabled,true);audio.activate();assert.equal(music.calls,0);assert.equal(audio.musicStarted,false);
  audio.startMusic();assert.equal(music.calls,1);assert.equal(music.dataset.playback,"playing");
 });
@@ -27,8 +27,14 @@ test("one mute toggle silences effects and music without resetting position",()=
  assert.equal(audio.toggle(),false);assert.equal(audio.master.gain.value,0);assert.equal(music.muted,true);
  assert.equal(audio.toggle(),true);assert.equal(audio.master.gain.value,1);assert.equal(music.muted,false);assert.equal(music.currentTime,25);assert.equal(music.calls,1);
 });
-test("a muted first attack arms the song and unmute resumes at its current position",()=>{
+test("a muted target selection arms the song and unmute resumes at its current position",()=>{
  const {audio,music}=setup();audio.toggle();audio.startMusic();assert.equal(music.muted,true);assert.equal(audio.musicStarted,true);music.currentTime=12;audio.toggle();assert.equal(music.currentTime,12);assert.equal(music.muted,false);
+});
+test("the impact wait can cover both perfect-hit samples and the dust sound uses its own buffer",async()=>{
+ const {audio,sources}=setup();audio.activate();await audio.loading;
+ audio.buffers[SOUND_FILES.strike].duration=.551;audio.buffers[SOUND_FILES.perfect].duration=.472;
+ assert.equal(audio.effectDuration('strike'),551);assert.equal(audio.effectDuration('perfect'),551);
+ audio.play('dust');assert.equal(sources[0].buffer,audio.buffers[SOUND_FILES.dust]);
 });
 test("replaying the encounter stops and resets the song",()=>{
  const {audio,music}=setup();audio.startMusic();music.currentTime=72;audio.resetMusic();assert.equal(music.paused,true);assert.equal(music.currentTime,0);assert.equal(audio.musicStarted,false);
@@ -36,11 +42,12 @@ test("replaying the encounter stops and resets the song",()=>{
 test("effects use the decoded simulator samples and a separate mix bus",async()=>{
  const {audio,sources}=setup();audio.activate();await audio.loading;audio.play("move");assert.equal(sources[0].buffer,audio.buffers[SOUND_FILES.move]);assert.ok(MIX.effects>MIX.music);
 });
-test("the heart phase silences active and new effects while leaving music alone",async()=>{
+test("the heart phase keeps interface sounds quiet while allowing the hurt sound",async()=>{
  const {audio,music,sources}=setup();audio.startMusic();await audio.loading;audio.play("confirm");const before=sources.length;
  audio.setEffectsMuted(true);assert.equal(audio.effects.gain.value,0);assert.equal(audio.musicGain.gain.value,MIX.music);assert.equal(music.paused,false);
- for(const kind of Object.keys(SOUND_FILES))audio.play(kind);assert.equal(sources.length,before);
- audio.toggle();audio.toggle();assert.equal(audio.effects.gain.value,0);assert.equal(music.paused,false);
- audio.setEffectsMuted(false);assert.equal(audio.effects.gain.value,MIX.effects);audio.play("move");assert.equal(sources.length,before+1);
+ for(const kind of Object.keys(SOUND_FILES).filter(kind=>kind!=="hit"))audio.play(kind);assert.equal(sources.length,before);
+ audio.play("hit");assert.equal(sources.length,before+1);assert.equal(sources.at(-1).buffer,audio.buffers[SOUND_FILES.hit]);assert.equal(audio.hurt.gain.value,MIX.effects);
+ audio.toggle();audio.play("hit");assert.equal(sources.length,before+1);audio.toggle();assert.equal(audio.effects.gain.value,0);assert.equal(music.paused,false);
+ audio.setEffectsMuted(false);assert.equal(audio.effects.gain.value,MIX.effects);audio.play("move");assert.equal(sources.length,before+2);
 });
 

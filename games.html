@@ -4,21 +4,22 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
 <meta name="description" content="Adam Shaltout: software engineering, CUDA, indie games and digital art. A playable pixel-art portfolio.">
 <title>Adam Shaltout | Games & Devlogs</title>
-<link rel="stylesheet" href="styles.css?v=20261117-flow2"><link rel="preload" href="assets/battle/soul-mono.ttf" as="font" type="font/ttf" crossorigin>
-<script type="module" src="script.js?v=20261117-flow2"></script>
+<link rel="stylesheet" href="styles.css?v=20261117-mobile4"><link rel="preload" href="assets/battle/soul-mono.ttf" as="font" type="font/ttf" crossorigin>
+<script type="module" src="script.js?v=20261117-mobile4"></script>
 </head>
 <body data-start="games">
 <main>
 <h1 class="sr-only">Adam Shaltout: a playable portfolio</h1>
 <div id="screen-wrap"><canvas id="battle" width="640" height="480" tabindex="0" role="img" aria-label="A pixel-art battle with Adam Shaltout. Arrow keys move, Z confirms, X goes back."></canvas><nav id="accessible-menu" aria-label="Current battle options"></nav></div>
 <p id="status" role="status" aria-live="polite" class="sr-only">Loading Adam's portfolio.</p>
+<p id="mobile-note" class="mobile-note">Best experienced on a computer.</p>
 <p class="key-guide" aria-label="Keyboard controls"><span><kbd>↑ ↓ ← →</kbd> MOVE</span><span><kbd>Z</kbd> SELECT</span><span><kbd>X</kbd> BACK</span><span><kbd>M</kbd> MUTE</span></p>
-<div class="utilities"><button id="sound" type="button" aria-pressed="true">SOUND: ON [M]</button><button id="quick" type="button">QUICK PORTFOLIO</button></div>
+<div class="utilities"><button id="sound" type="button" aria-pressed="true">SOUND: ON [M]</button><button id="quick" type="button">SKIP FIGHT (QUICK PORTFOLIO)</button></div>
 <p class="song-credit">Rakuichi Buster, Toby Fox</p>
 <audio id="battle-music" src="assets/audio/rakuichi-buster.m4a" loop preload="auto"></audio>
 <div class="touch-controls" aria-label="Touch controls"><div class="dpad"><button data-key="ArrowUp" aria-label="Up">↑</button><button data-key="ArrowLeft" aria-label="Left">←</button><button data-key="ArrowDown" aria-label="Down">↓</button><button data-key="ArrowRight" aria-label="Right">→</button></div><button class="touch-action" data-key="x" aria-label="Back">X</button><button class="touch-action" data-key="z" aria-label="Select">Z</button></div>
 <p id="load-error" hidden>Something could not load. <button id="retry" type="button">RETRY</button> <button id="fallback" type="button">READ PORTFOLIO</button></p>
-<noscript><p>This encounter uses JavaScript. Visit <a href="https://github.com/dimos1234">Adam's GitHub</a> or <a href="mailto:adam.shaltout@mail.utoronto.ca">email Adam</a>.</p></noscript>
+<noscript><p>This encounter uses JavaScript. <a href="portfolio/index.html">View the portfolio</a>.</p></noscript>
 </main>
 <dialog id="reader" aria-labelledby="reader-title"><div class="reader-header"><h2 id="reader-title">Adam Shaltout</h2><button id="reader-close" type="button" aria-label="Close portfolio">X CLOSE</button></div><div id="reader-content"></div></dialog>
 </body>
