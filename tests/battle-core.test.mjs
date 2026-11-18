@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {attackPosition,attackResult,fitScale} from "../battle-core.js";
 import {ENCOUNTER_LINES,hitReactionLines,arrowsNavigate,contentPages,DEFEAT_LINES,BOSS_MAX_HP,applyDamage} from "../battle-core.js";
-import {projects,art} from "../content.js";
+import {projects,art,acts} from "../content.js";
 test("the first attack never misses and keeps bouncing",()=>{
  assert.equal(attackPosition(0),60);assert.equal(attackPosition(1200),580);assert.equal(attackPosition(2400),60);
  for(let ms=0;ms<120000;ms+=17){const x=attackPosition(ms),result=attackResult(x);assert.ok(x>=60&&x<=580);assert.ok(result.damage>=12&&result.damage<=28);}
@@ -23,8 +23,13 @@ test("hit reactions are short and leave control instructions to the persistent g
  for(const perfect of [false,true]){const lines=hitReactionLines(perfect);assert.ok(lines.length<=3);assert.ok(lines.every(line=>line.length<=43));assert.ok(!lines.join(' ').includes('Press Z'));}
 });
 test("arrows navigate menus but never dialogue or the heart-phase menu",()=>{
- for(const mode of ["detail","dialogue","hit","defense","attack","dust","leaving","boot"])assert.equal(arrowsNavigate(mode),false);
- for(const mode of ["root","list"])assert.equal(arrowsNavigate(mode),true);
+ for(const mode of ["detail","dialogue","hit","defense","attack","dust","leaving"])assert.equal(arrowsNavigate(mode),false);
+ for(const mode of ["boot","root","list"])assert.equal(arrowsNavigate(mode),true);
+});
+test("the four ACT summaries keep each requested paragraph on its own page",()=>{
+ assert.deepEqual(acts.map(entry=>entry.title),["Check Adam","Pulsenics","Projects","Interests"]);
+ assert.deepEqual(acts.map(entry=>contentPages(entry).length),[3,2,3,2]);
+ for(const entry of acts){const pages=contentPages(entry);pages.forEach((page,i)=>{assert.equal(page.join(' '),'* '+entry.pages[i]);assert.ok(page.length<=3&&page.every(line=>line.length<=43));});}
 });
 test("Adam survives three perfect hits and can actually be defeated on the fourth",()=>{
  let hp=BOSS_MAX_HP;

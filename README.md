@@ -14,7 +14,9 @@ Arrow keys move/select, Z confirms/strikes, X goes back, and **M mutes or unmute
 
 Only FIGHT appears before the first hit. The timing bar bounces indefinitely and every hit succeeds for 12–28 damage against 100 HP. Adam's LV 20 and health stay beneath his sprite. A strike plays its full animation and sound while the dialogue box stays empty. The reaction dialogue then waits for Z before Adam counterattacks. Every surviving hit gets a six-second heart-control turn, followed by the action menu. Music continues through that turn; only taking damage plays a sound effect. Movement and menu cues stay quiet.
 
-ACT opens the projects, experience, games, artwork and biography. Z advances dialogue; arrows only navigate menus or move the heart. Each final project or artwork prompt includes an X-to-return note.
+The opening offers large **Go to Portfolio** and **Fight Adam** buttons. Arrow keys choose between them and Z selects; clicking and touch work too. The persistent Skip Fight button remains available.
+
+ACT contains four short summaries: **Check Adam**, **Pulsenics**, **Projects**, and **Interests**. Each requested paragraph is a separate dialogue page. Z advances dialogue; X returns to the menu. MERCY offers View Portfolio and Replay Encounter.
 
 The final hit leads to Adam's defeat dialogue. Z starts the death sprite sequence and Undertale vaporizing sound, then opens the restored original website in `portfolio/`. **Skip Fight (Quick Portfolio)** goes directly to the same website. All three original pages and their design are restored; the archival backup is unchanged. Replay Battle on those pages starts a fresh encounter.
 

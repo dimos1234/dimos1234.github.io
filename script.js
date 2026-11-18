@@ -1,8 +1,8 @@
 import {text,center} from "./pixel-font.js";
 import {SpritePlayer} from "./sprites.js?v=20261117-boss3";
 import {BattleAudio} from "./audio.js?v=20261117-mobile4";
-import {profile,collections,experience,projects,games,art,life} from "./content.js";
-import {clamp,attackPosition,attackResult,fitScale,availableActionCount,ENCOUNTER_LINES,hitReactionLines,arrowsNavigate,contentPages,DEFEAT_LINES,BOSS_MAX_HP,applyDamage} from "./battle-core.js?v=20261117-mobile4";
+import {profile,collections,experience,projects,games,art,life,acts} from "./content.js?v=20261117-acts5";
+import {clamp,attackPosition,attackResult,fitScale,availableActionCount,ENCOUNTER_LINES,hitReactionLines,arrowsNavigate,contentPages,DEFEAT_LINES,BOSS_MAX_HP,applyDamage} from "./battle-core.js?v=20261117-acts5";
 
 const canvas=document.getElementById("battle"), ctx=canvas.getContext("2d");
 const status=document.getElementById("status"), accessible=document.getElementById("accessible-menu");
@@ -10,17 +10,18 @@ const reader=document.getElementById("reader");
 const sprites=new SpritePlayer(),audio=new BattleAudio(),held=new Set();
 const labels=["FIGHT","ACT","ITEM","MERCY"];
 const actionX=[32,185,345,500];
+const startOptions=[{label:"Go to Portfolio",x:32,action:()=>visitPortfolio()},{label:"Fight Adam",x:332,action:begin}];
 const heartRows=["01100110","11111111","11111111","11111111","01111110","00111100","00011000","00000000"];
 const stack=[];
-const state={mode:"loading",age:0,total:0,root:0,index:0,title:"",options:[],page:0,pages:[],entry:null,listKey:null,unlocked:false,hasAttacked:false,damage:0,perfect:false,hp:20,bossHp:BOSS_MAX_HP,hitAge:Infinity,hitDuration:0,dustDuration:0,turn:0,dialogueLocked:false,heart:{x:312,y:308},invulnerable:0,reveal:false};
+const state={mode:"loading",age:0,total:0,bootChoice:1,root:0,index:0,title:"",options:[],page:0,pages:[],entry:null,listKey:null,unlocked:false,hasAttacked:false,damage:0,perfect:false,hp:20,bossHp:BOSS_MAX_HP,hitAge:Infinity,hitDuration:0,dustDuration:0,turn:0,dialogueLocked:false,heart:{x:312,y:308},invulnerable:0,reveal:false};
 let ready=false,last=null,hitAreas=[],lastAnnouncement="",lastTypeCount=0;
 let rootLines=[...ENCOUNTER_LINES];
 
 function announce(message){if(message!==lastAnnouncement){status.textContent=message;lastAnnouncement=message;}}
 function mirror(){
  accessible.replaceChildren();
- const add=(label,action,rect={x:32,y:250,w:576,h:135})=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.style.left=rect.x/640*100+"%";b.style.top=rect.y/480*100+"%";b.style.width=rect.w/640*100+"%";b.style.height=rect.h/480*100+"%";b.addEventListener("click",()=>{audio.activate();action();});accessible.append(b);};
- if(state.mode==="boot")add("Begin encounter",begin,{x:0,y:0,w:640,h:480});
+ const add=(label,action,rect={x:32,y:250,w:576,h:135})=>{const b=document.createElement("button");b.type="button";b.textContent=label;b.style.left=rect.x/640*100+"%";b.style.top=rect.y/480*100+"%";b.style.width=rect.w/640*100+"%";b.style.height=rect.h/480*100+"%";b.addEventListener("click",()=>{audio.activate();action();});accessible.append(b);return b;};
+ if(state.mode==="boot")startOptions.forEach((option,i)=>{const b=add(option.label,option.action,{x:option.x,y:332,w:276,h:88});b.addEventListener("focus",()=>{state.bootChoice=i;});b.addEventListener("pointerenter",()=>{state.bootChoice=i;});});
  else if(state.mode==="root")labels.slice(0,availableActionCount(state.unlocked,state.hasAttacked)).forEach((label,i)=>add(label,()=>{state.root=i;rootAction();},{x:actionX[i],y:432,w:110,h:42}));
  else if(state.mode==="target")add("Adam Shaltout",startAttack);
  else if(state.mode==="attack")add("Strike now",strike);
@@ -34,15 +35,8 @@ function restore(snapshot){Object.assign(state,snapshot);canvas.dataset.mode=sta
 function list(title,options,{key=null,push=true,index=0}={}){if(push)stack.push(capture());state.title=title;state.options=options;state.index=index;state.listKey=key;mode("list");announce(title+". "+options.map(o=>o.label).join(", "));}
 function root(lines){if(lines)rootLines=lines;mode("root");announce(rootLines.join(" ")+(availableActionCount(state.unlocked,state.hasAttacked)===1?" Choose FIGHT.":" Use FIGHT, ACT, ITEM or MERCY."));}
 function begin(){if(!ready)return;audio.resetMusic();try{sessionStorage.removeItem("adam-defeated");}catch{}held.clear();stack.length=0;state.unlocked=false;state.hasAttacked=false;state.hp=20;state.bossHp=BOSS_MAX_HP;state.turn=0;state.hitAge=Infinity;state.root=0;state.damage=0;sprites.play("entrance");root([...ENCOUNTER_LINES]);audio.play("start");}
-function openCollection(key){const entries=collections[key];if(!entries)return;list({projects:"TECHNICAL PROJECTS",experience:"ENGINEERING EXPERIENCE",games:"GAMES & DEVLOGS",art:"ART & SPRITES",life:"BEYOND THE SCREEN"}[key],entries.map((entry,index)=>({label:entry.title==="AI/ML Engineering Intern"?"AI/ML Intern":entry.title,action:()=>detail(entry)})),{key});}
-function actMenu(){list("ACT / ADAM SHALTOUT",[
- {label:"Check Adam",action:()=>detail({title:"Adam Shaltout",stack:"Software engineer / Creator",paragraphs:[profile.intro,"Currently back at university after completing an Applied AI/ML Engineering internship at Pulsenics in August 2026."]})},
- {label:"Projects",action:()=>openCollection("projects")},
- {label:"Experience",action:()=>openCollection("experience")},
- {label:"Games & Devlogs",action:()=>openCollection("games")},
- {label:"Art & Sprites",action:()=>openCollection("art")},
- {label:"Beyond the Screen",action:()=>openCollection("life")}
- ]);}
+function openCollection(key){const entries=collections[key];if(!entries)return;list({projects:"TECHNICAL PROJECTS",experience:"ENGINEERING EXPERIENCE",games:"GAMES & DEVLOGS",art:"ART & SPRITES",life:"BEYOND THE SCREEN"}[key],entries.map(entry=>({label:entry.title,action:()=>detail(entry)})),{key});}
+function actMenu(){list("ACT / ADAM SHALTOUT",acts.map(entry=>({label:entry.title,action:()=>detail(entry)})));}
 function itemMenu(){list("ITEM",[
  {label:"Resume",action:()=>openReader("Resume",{experience,projects})},
  {label:"GitHub",action:()=>openLink(profile.github)},
@@ -50,7 +44,6 @@ function itemMenu(){list("ITEM",[
  {label:"Email",action:()=>openLink(profile.email)}
  ]);}
 function mercyMenu(){list("MERCY",[
- {label:"Spare",action:()=>{state.unlocked=true;stack.length=0;state.root=1;root(["* You spare Adam.","* He offers you a tour. Choose ACT."]);}},
  {label:"View Portfolio",action:()=>visitPortfolio()},
  {label:"Replay Encounter",action:begin}
  ]);}
@@ -85,7 +78,7 @@ function pageText(){return state.mode==="detail"?state.pages[state.page]:state.m
 function fullyTyped(){return state.reveal||state.age>=pageText().join("").length*17;}
 function confirm(){
  if(!["boot","attack","root","target"].includes(state.mode))audio.play("confirm");
- if(state.mode==="boot"){begin();return;}
+ if(state.mode==="boot"){startOptions[state.bootChoice].action();return;}
  if(state.mode==="root"){rootAction();return;}
  if(state.mode==="target"){startAttack();return;}
  if(state.mode==="attack"){strike();return;}
@@ -101,6 +94,7 @@ function input(key,repeat=false){
  if(key==="z"||key==="Enter"){if(!repeat)confirm();return;}
  if(key==="x"||key==="Escape"){if(state.mode==="dialogue"&&!fullyTyped())state.reveal=true;else back();return;}
  if(!key.startsWith("Arrow")||!arrowsNavigate(state.mode))return;
+ if(state.mode==="boot"){state.bootChoice=1-state.bootChoice;audio.play("move");announce(startOptions[state.bootChoice].label);return;}
  if(state.mode==="root"){if(!fullyTyped())return;const delta=key==="ArrowLeft"||key==="ArrowUp"?-1:1;const count=availableActionCount(state.unlocked,state.hasAttacked),next=(state.root+delta+count)%count;if(next!==state.root)audio.play("move");state.root=next;announce(labels[state.root]);}
  if(state.mode==="list"){const delta=key==="ArrowLeft"?-1:key==="ArrowRight"?1:key==="ArrowUp"?-2:2;const next=(state.index+delta+state.options.length)%state.options.length;if(next!==state.index)audio.play("move");state.index=next;mirror();announce(state.options[state.index].label);}
 }
@@ -136,8 +130,7 @@ function drawDefense(){box(238,250,164,135);for(const b of defenseBullets()){ctx
 function drawIntro(){
  if(state.mode==="loading"){center(ctx,"LOADING ENCOUNTER...",222,{sx:2,sy:3});return;}
  heart(312,105);center(ctx,"AN UNEXPECTED",178,{sx:3,sy:3});center(ctx,"ENCOUNTER",212,{sx:4,sy:4});center(ctx,"ADAM SHALTOUT",278,{sx:2,sy:2,color:"#aaa"});
- if(Math.floor(state.total/650)%2===0)center(ctx,"[ Z ] BEGIN",345,{sx:2,sy:3,color:"#ffff00"});
- hitAreas.push({x:0,y:0,w:640,h:480,action:begin});
+ startOptions.forEach((option,i)=>{const selected=state.bootChoice===i,color=selected?"#ffff00":"#ff8000";ctx.fillStyle=color;ctx.fillRect(option.x,332,276,88);ctx.fillStyle="#000";ctx.fillRect(option.x+3,335,270,82);const label=option.label.toUpperCase();text(ctx,label,option.x+(276-label.length*12)/2,365,{sx:2,sy:3,color});hitAreas.push({x:option.x,y:332,w:276,h:88,action:option.action});});
 }
 function render(){
  ctx.imageSmoothingEnabled=false;ctx.fillStyle="#000";ctx.fillRect(0,0,640,480);hitAreas=[];
@@ -185,4 +178,4 @@ document.getElementById("retry").addEventListener("click",()=>location.reload())
 document.getElementById("fallback").addEventListener("click",()=>visitPortfolio());
 reader.addEventListener("close",()=>canvas.focus());
 resize();requestAnimationFrame(tick);
-try{let defeated=false;try{defeated=sessionStorage.getItem("adam-defeated")==="1";}catch{}if(defeated&&!new URLSearchParams(location.search).has("intro")){visitPortfolio(true);}else{await sprites.load();ready=true;const direct=document.body.dataset.start||({"#engineering":"experience","#projects":"projects","#games":"games","#art":"art"})[location.hash];if(direct){state.unlocked=true;root();openCollection(direct);}else{let seen=false;try{seen=sessionStorage.getItem("adam-encounter-complete")==="1";}catch{}if(seen&&!new URLSearchParams(location.search).has("intro")){state.unlocked=true;state.root=1;root(["* Welcome back.","* Choose ACT to continue exploring."]);}else{mode("boot");announce("An unexpected encounter. Press Z to begin.");}}}}catch(error){console.error("Sprite loading failed",error);document.getElementById("load-error").hidden=false;announce("Sprite loading failed. The static portfolio is available below.");}
+try{let defeated=false;try{defeated=sessionStorage.getItem("adam-defeated")==="1";}catch{}if(defeated&&!new URLSearchParams(location.search).has("intro")){visitPortfolio(true);}else{await sprites.load();ready=true;const direct=document.body.dataset.start||({"#engineering":"experience","#projects":"projects","#games":"games","#art":"art"})[location.hash];if(direct){state.unlocked=true;root();openCollection(direct);}else{mode("boot");announce("Choose Go to Portfolio or Fight Adam. Arrow keys choose; Z selects.");}}}catch(error){console.error("Sprite loading failed",error);document.getElementById("load-error").hidden=false;announce("Sprite loading failed. The static portfolio is available below.");}

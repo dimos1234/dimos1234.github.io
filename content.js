@@ -15,7 +15,7 @@ export const projects = [
   {title:"Toronto GIS",stack:"C++ / EZGL",tag:"University of Toronto",paragraphs:["Foundational Toronto mapping software using EZGL for the GUI and vanilla C++ for the backend.","Includes search, street and intersection data extraction, and points-of-interest rendering."]}
 ];
 export const experience = [
-  {title:"AI/ML Engineering Intern",fullTitle:"Applied AI/ML Engineering Intern",stack:"Pulsenics Inc. | Toronto, ON",tag:"May 2026 - Aug 2026",paragraphs:["Automated account generation using n8n, Docker, and the Claude API, replacing a manual operations workflow and saving 18+ hours per week.","Engineered web scrapers using Exa AI, Apify, and Adzuna APIs, feeding a Node.js/Supabase pipeline for targeted lead discovery across 500+ accounts."]},
+  {title:"Digital Operations Intern",stack:"Pulsenics Inc. | Toronto, ON",tag:"May 2026 - Aug 2026",paragraphs:["Automated account generation using n8n, Docker, and the Claude API, replacing a manual operations workflow and saving 18+ hours per week.","Engineered web scrapers using Exa AI, Apify, and Adzuna APIs, feeding a Node.js/Supabase pipeline for targeted lead discovery across 500+ accounts."]},
   {title:"Data Analyst Intern",stack:"Pulsenics Inc. | Toronto, ON",tag:"May 2025 - Aug 2025",paragraphs:["Developed an automated Distribution of Relaxation Times analysis application in Python.","Built a GBR model to predict average electrochemical cell capacities with R² = 0.85.","Automated processing of 10,000+ lines of electrochemical data with Python and Pandas."]},
   {title:"Operations Volunteer",stack:"Pulsenics Inc. | Toronto, ON",tag:"Jan 2025 - April 2025",paragraphs:["Prospected leads using Apollo and LinkedIn Sales Navigator, explored a potential new electrochemical market, and used advanced Excel formulae to organize 200+ leads."]},
   {title:"Website Developer",fullTitle:"Website Maintenance Developer",stack:"GTA Photo 3D | Toronto, ON",tag:"Jan 2021 - Sep 2024",paragraphs:["Maintained a professional real-estate photography portfolio, improved SEO, and integrated responsive pages and interactive galleries using HTML, CSS and JavaScript."]}
@@ -36,3 +36,9 @@ export const life = [
   {title:"Keyboards & Cubing",stack:"Mechanical keyboards / Speedcubing",paragraphs:["I speedcube and build custom mechanical keyboards. I enjoy taking things apart, modding them, and dialing in how they feel."]}
 ];
 export const collections = { projects, experience, games, art, life };
+export const acts = [
+  {title:"Check Adam",pages:["Software engineer, indie game developer, and digital creator.","He has a strong interest in GPU kernels and programming languages.","Currently back at university after completing an internship at Pulsenics."]},
+  {title:"Pulsenics",pages:["Adam previously worked at a startup named Pulsenics.","He developed machine learning models and automation scripts."]},
+  {title:"Projects",pages:["Adam developed several CUDA C++ projects.","He has also developed Skikai.","An autonomous digital AI entity."]},
+  {title:"Interests",pages:["Adam enjoys playing games, playing the piano, or parkour.","He is also working on growing his YouTube channel."]}
+];
