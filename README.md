@@ -12,7 +12,9 @@ Open http://127.0.0.1:4173/?intro=1 to replay the opening.
 
 Arrow keys move/select, Z confirms/strikes, X goes back, and **M mutes or unmutes all audio**. Mouse and touch controls are also available. Sound is enabled by default; browsers unlock playback on the first interaction. Rakuichi Buster begins when the first attack lands.
 
-Only FIGHT appears before the first hit. The timing bar bounces indefinitely and every hit succeeds. After the short encounter, ACT opens the projects, experience, games, artwork and biography. Quick Portfolio provides a readable view with real links.
+Only FIGHT appears before the first hit. The timing bar bounces indefinitely and every hit succeeds. The first strike goes straight into Adam's six-second heart attack, with music but no sound effects. Adam's LV 20 and health stay beneath his sprite. After an attack, one dialogue box holds the hit reaction and the invitation to choose ACT.
+
+ACT opens the projects, experience, games, artwork and biography. Z advances dialogue; arrows only navigate menus or move the heart. Each final project or artwork prompt includes an X-to-return note. Quick Portfolio provides a readable view with real links.
 
 ## Checks
 

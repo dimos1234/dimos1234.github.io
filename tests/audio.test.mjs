@@ -36,4 +36,11 @@ test("replaying the encounter stops and resets the song",()=>{
 test("effects use the decoded simulator samples and a separate mix bus",async()=>{
  const {audio,sources}=setup();audio.activate();await audio.loading;audio.play("move");assert.equal(sources[0].buffer,audio.buffers[SOUND_FILES.move]);assert.ok(MIX.effects>MIX.music);
 });
+test("the heart phase silences active and new effects while leaving music alone",async()=>{
+ const {audio,music,sources}=setup();audio.startMusic();await audio.loading;audio.play("confirm");const before=sources.length;
+ audio.setEffectsMuted(true);assert.equal(audio.effects.gain.value,0);assert.equal(audio.musicGain.gain.value,MIX.music);assert.equal(music.paused,false);
+ for(const kind of Object.keys(SOUND_FILES))audio.play(kind);assert.equal(sources.length,before);
+ audio.toggle();audio.toggle();assert.equal(audio.effects.gain.value,0);assert.equal(music.paused,false);
+ audio.setEffectsMuted(false);assert.equal(audio.effects.gain.value,MIX.effects);audio.play("move");assert.equal(sources.length,before+1);
+});
 

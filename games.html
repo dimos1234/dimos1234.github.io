@@ -4,16 +4,16 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
 <meta name="description" content="Adam Shaltout: software engineering, CUDA, indie games and digital art. A playable pixel-art portfolio.">
 <title>Adam Shaltout | Games & Devlogs</title>
-<link rel="stylesheet" href="styles.css"><link rel="preload" href="assets/battle/soul-mono.ttf" as="font" type="font/ttf" crossorigin>
-<script type="module" src="script.js"></script>
+<link rel="stylesheet" href="styles.css?v=20261117-flow2"><link rel="preload" href="assets/battle/soul-mono.ttf" as="font" type="font/ttf" crossorigin>
+<script type="module" src="script.js?v=20261117-flow2"></script>
 </head>
 <body data-start="games">
 <main>
 <h1 class="sr-only">Adam Shaltout: a playable portfolio</h1>
 <div id="screen-wrap"><canvas id="battle" width="640" height="480" tabindex="0" role="img" aria-label="A pixel-art battle with Adam Shaltout. Arrow keys move, Z confirms, X goes back."></canvas><nav id="accessible-menu" aria-label="Current battle options"></nav></div>
 <p id="status" role="status" aria-live="polite" class="sr-only">Loading Adam's portfolio.</p>
-<p class="key-guide">↑ ↓ ← → MOVE <span>Z</span> SELECT <span>X</span> BACK <span>M</span> MUTE</p>
-<div class="utilities"><button id="sound" type="button" aria-pressed="true">SOUND: ON [M]</button><button id="fullscreen" type="button">FULLSCREEN</button><button id="quick" type="button">QUICK PORTFOLIO</button></div>
+<p class="key-guide" aria-label="Keyboard controls"><span><kbd>↑ ↓ ← →</kbd> MOVE</span><span><kbd>Z</kbd> SELECT</span><span><kbd>X</kbd> BACK</span><span><kbd>M</kbd> MUTE</span></p>
+<div class="utilities"><button id="sound" type="button" aria-pressed="true">SOUND: ON [M]</button><button id="quick" type="button">QUICK PORTFOLIO</button></div>
 <p class="song-credit">Rakuichi Buster, Toby Fox</p>
 <audio id="battle-music" src="assets/audio/rakuichi-buster.m4a" loop preload="auto"></audio>
 <div class="touch-controls" aria-label="Touch controls"><div class="dpad"><button data-key="ArrowUp" aria-label="Up">↑</button><button data-key="ArrowLeft" aria-label="Left">←</button><button data-key="ArrowDown" aria-label="Down">↓</button><button data-key="ArrowRight" aria-label="Right">→</button></div><button class="touch-action" data-key="x" aria-label="Back">X</button><button class="touch-action" data-key="z" aria-label="Select">Z</button></div>

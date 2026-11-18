@@ -6,12 +6,12 @@ export const SOUND_FILES = {
 export const MIX = {music: 0.42, effects: 1.1};
 export class BattleAudio {
  constructor({music,contextFactory,fetcher}={}){
-  this.enabled=true;this.context=null;this.musicStarted=false;this.buffers={};this.lastPlayed=new Map();
+  this.enabled=true;this.effectsMuted=false;this.context=null;this.musicStarted=false;this.buffers={};this.lastPlayed=new Map();
   this.contextFactory=contextFactory||(()=>{const Audio=window.AudioContext||window.webkitAudioContext;return Audio?new Audio():null;});
   this.fetcher=fetcher||((url)=>fetch(url));
   this.music=music||document.getElementById("battle-music");
   this.music.loop=true;this.music.preload="auto";this.music.muted=false;
-  this.music.dataset.enabled="true";this.music.dataset.started="false";this.music.dataset.playback="armed";
+  this.music.dataset.enabled="true";this.music.dataset.started="false";this.music.dataset.playback="armed";this.music.dataset.effectsMuted="false";
   this.music.addEventListener("playing",()=>{this.music.dataset.playback="playing";});
   this.music.addEventListener("pause",()=>{this.music.dataset.playback="paused";});
   this.music.addEventListener("error",()=>{this.music.dataset.playback="error";});
@@ -24,7 +24,7 @@ export class BattleAudio {
    this.context=this.contextFactory();
    if(this.context){
     const c=this.context;this.master=c.createGain();this.master.gain.value=this.enabled?1:0;
-    this.effects=c.createGain();this.effects.gain.value=MIX.effects;this.effects.connect(this.master);
+    this.effects=c.createGain();this.effects.gain.value=this.effectsMuted?0:MIX.effects;this.effects.connect(this.master);
     this.musicGain=c.createGain();this.musicGain.gain.value=MIX.music;this.musicGain.connect(this.master);
     this.musicSource=c.createMediaElementSource(this.music);this.musicSource.connect(this.musicGain);
     if(c.createDynamicsCompressor){this.limiter=c.createDynamicsCompressor();this.limiter.threshold.value=-3;this.limiter.ratio.value=12;this.limiter.attack.value=.003;this.limiter.release.value=.15;this.master.connect(this.limiter);this.limiter.connect(c.destination);}else this.master.connect(c.destination);
@@ -37,6 +37,7 @@ export class BattleAudio {
  tryMusic(){const result=this.music.play();if(result?.catch)result.catch(()=>{this.music.dataset.playback="waiting-for-interaction";});}
  startMusic(){this.activate();if(!this.musicStarted){this.musicStarted=true;this.music.dataset.started="true";this.tryMusic();}}
  resetMusic(){this.musicStarted=false;this.music.dataset.started="false";this.music.pause();this.music.currentTime=0;this.music.dataset.playback="armed";}
+ setEffectsMuted(muted){this.effectsMuted=muted;this.music.dataset.effectsMuted=String(muted);if(this.effects)this.effects.gain.value=muted?0:MIX.effects;}
  toggle(){
   this.enabled=!this.enabled;this.music.muted=!this.enabled;
   this.music.dataset.enabled=String(this.enabled);
@@ -45,7 +46,7 @@ export class BattleAudio {
   return this.enabled;
  }
  play(kind){
-  if(!this.enabled||!this.context)return;
+  if(!this.enabled||this.effectsMuted||!this.context)return;
   const now=this.context.currentTime;const gap=kind==="text"?.055:.025;
   if(now-(this.lastPlayed.get(kind)??-Infinity)<gap)return;this.lastPlayed.set(kind,now);
   const file=SOUND_FILES[kind]||SOUND_FILES.move;
